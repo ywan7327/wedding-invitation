@@ -255,30 +255,32 @@
 
   <!-- 实时倒计时计算脚本 -->
   <script>
-    (function() {
-      // 设置婚礼日期：2026年10月7日 (注意：月份从0开始，所以10月写9)
-      var weddingDate = new Date(2026, 9, 7); 
-      
-      var today = new Date();
-      // 去掉时间部分，只比较日期
-      today.setHours(0, 0, 0, 0);
-      weddingDate.setHours(0, 0, 0, 0);
+  (function() {
+    // 设置婚礼日期：2026年10月7日 (月份从0开始，所以10月写9)
+    var weddingDate = new Date(2026, 9, 7); 
+    
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    weddingDate.setHours(0, 0, 0, 0);
 
-      var diffTime = weddingDate - today;
-      var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    var diffTime = weddingDate - today;
+    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-      // 找到页面上显示天数的地方并更新
-      var display = document.querySelector('[data-countdown-days]');
-      if (display) {
-        if (diffDays > 0) {
-          display.innerText = diffDays;
-        } else if (diffDays === 0) {
-          display.innerText = "0 (今天!)";
-        } else {
-          display.innerText = "已礼成";
-        }
+    // 找到页面上显示倒计时的地方
+    var display = document.querySelector('[data-countdown-days]');
+    if (display) {
+      if (diffDays > 0) {
+        // 还没到婚礼，显示完整句子
+        display.innerText = "距离婚礼日还有 " + diffDays + " 天！";
+      } else if (diffDays === 0) {
+        // 婚礼当天
+        display.innerText = "今天就是婚礼日！";
+      } else {
+        // 婚礼已过
+        display.innerText = "婚礼日已到，已礼成！";
       }
-    })();
-  </script>
+    }
+  })();
+</script>
 </body>
 </html>
