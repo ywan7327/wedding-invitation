@@ -38,7 +38,7 @@ const spriteParade = document.querySelector('[data-sprite-parade]');
 const weddingCountdown = document.querySelector('[data-wedding-countdown]');
 const countdownDays = document.querySelector('[data-countdown-days]');
 
-const WEDDING_DATE = Date.UTC(2026, 10, 7);
+const WEDDING_DATE = Date.UTC(2026, 9, 7);
 const SHANGHAI_TIME_ZONE = 'Asia/Shanghai';
 const SPRITE_SHEET_URL = './sprite.png';
 const CAR_IMAGE_URL = './car.png';
