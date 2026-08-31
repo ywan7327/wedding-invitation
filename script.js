@@ -67,24 +67,40 @@ function preventLockedScroll(event) {
 window.addEventListener('touchmove', preventLockedScroll, { passive: false });
 window.addEventListener('wheel', preventLockedScroll, { passive: false });
 
-const observer = new IntersectionObserver((entries) => {
-  const visibleEntry = entries
-    .filter((entry) => entry.isIntersecting)
-    .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+function updateActiveSection() {
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const marker = viewportHeight * 0.5; // 视口中点
+  const scrolledToBottom =
+    window.scrollY + viewportHeight >= document.documentElement.scrollHeight - 2;
 
-  entries.forEach((entry) => {
-    entry.target.classList.toggle('is-visible', entry.isIntersecting);
+  let activeIndex = 0;
+
+  if (scrolledToBottom) {
+    activeIndex = sections.length - 1; // 滚到底 → 强制最后一页
+  } else {
+    sections.forEach((section, index) => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= marker && rect.bottom > marker) {
+        activeIndex = index;
+      }
+    });
+  }
+
+  dots.forEach((dot, index) => {
+    dot.classList.toggle('is-active', index === activeIndex);
   });
 
-  if (!visibleEntry) return;
-
-  const index = sections.indexOf(visibleEntry.target);
-  dots.forEach((dot, dotIndex) => {
-    dot.classList.toggle('is-active', dotIndex === index);
+  // 保留首页花瓣动画需要的 is-visible
+  sections.forEach((section) => {
+    const rect = section.getBoundingClientRect();
+    section.classList.toggle('is-visible', rect.top < viewportHeight && rect.bottom > 0);
   });
-}, { threshold: 0.58 });
+}
 
-sections.forEach((section) => observer.observe(section));
+window.addEventListener('scroll', updateActiveSection, { passive: true });
+window.addEventListener('resize', updateActiveSection);
+updateActiveSection();
+
 
 prepareSpriteActors();
 prepareCarIcon();
